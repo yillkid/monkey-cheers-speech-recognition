@@ -7,7 +7,7 @@ red_led_reset_trigger = "input"
 
 def control(led_colour, state):
     # Check platform
-    if not os.path.isfile(green_led):
+    if not os.path.isdir(green_led):
         return
 
     if led_colour == "green":
