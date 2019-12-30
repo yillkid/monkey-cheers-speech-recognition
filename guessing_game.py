@@ -1,6 +1,7 @@
 import random
 import time
 import speech_recognition as sr
+from led import control as led_control
 
 def recognize_speech_from_mic(recognizer, microphone):
     # check that recognizer and microphone arguments are appropriate type
@@ -18,9 +19,9 @@ def recognize_speech_from_mic(recognizer, microphone):
 
     # adjust the recognizer sensitivity to ambient noise and record audio
     # from the microphone
-
     with microphone as source:
         try:
+            led_control("green", "on")
             print("1/3: 我正在聽呢 ... ...")
             recognizer.adjust_for_ambient_noise(source)
             audio = recognizer.listen(source, timeout=3)
@@ -41,11 +42,14 @@ def recognize_speech_from_mic(recognizer, microphone):
         # API was unreachable or unresponsive
         response["success"] = False
         response["error"] = "API unavailable"
+        led_control("red", "flash")
     except sr.UnknownValueError:
         # speech was unintelligible
         response["error"] = "我的 Google 語音辨識好像失效了！"
+        led_control("red", "flash")
 
     # TODO: 比對答案
+    led_control("green", "flash")
     print("3/3: 我猜完了，一共花了 %s 秒！" % (time.time() - start_time))
     
     return response
@@ -56,6 +60,11 @@ if __name__ == "__main__":
 
     while True:
         # TODO: 檢查網路狀態
+
+        # Set LED
+        led_control("green", "off")
+        led_control("red", "off")
+
         recognizer = sr.Recognizer()
         microphone = sr.Microphone()
 
