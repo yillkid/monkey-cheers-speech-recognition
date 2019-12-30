@@ -1,4 +1,5 @@
 import os
+import time
 
 green_led = "/sys/class/leds/led0"
 red_led = "/sys/class/leds/led1"
@@ -42,3 +43,27 @@ def control(led_colour, state):
 
     else:
         return
+
+def led_reset_all():
+    control("green", "reset")
+    control("red", "reset")
+    control("green", "off")
+    control("red", "off")
+
+def led_win():
+    control("red", "off")
+    for index in range(5):
+        control("green", "flash")
+        time.sleep(1)
+
+def led_lose():
+    control("green", "off")
+    for index in range(5):
+        control("red", "flash")
+        time.sleep(1)
+
+def led_listen():
+    control("red", "off")
+    time.sleep(1)
+    control("green", "on")
+    time.sleep(1)
