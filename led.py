@@ -6,6 +6,10 @@ green_led_reset_trigger = "mmc0"
 red_led_reset_trigger = "input"
 
 def control(led_colour, state):
+    # Check platform
+    if not os.path.isfile(green_led):
+        return
+
     if led_colour == "green":
         device = green_led
 
