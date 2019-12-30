@@ -21,8 +21,8 @@ def recognize_speech_from_mic(recognizer, microphone):
     # from the microphone
     with microphone as source:
         try:
-            led_control("green", "on")
             print("1/3: 我正在聽呢 ... ...")
+            led_control("green", "on")
             recognizer.adjust_for_ambient_noise(source)
             audio = recognizer.listen(source, timeout=3)
         except Exception as e:
@@ -42,11 +42,18 @@ def recognize_speech_from_mic(recognizer, microphone):
         # API was unreachable or unresponsive
         response["success"] = False
         response["error"] = "API unavailable"
-        led_control("red", "flash")
+
+        for index in range(3):
+            time.sleep(1)
+            led_control("red", "flash")
+
     except sr.UnknownValueError:
         # speech was unintelligible
         response["error"] = "我的 Google 語音辨識好像失效了！"
-        led_control("red", "flash")
+
+        for index in range(3):
+            time.sleep(1)
+            led_control("red", "flash")
 
     # TODO: 比對答案
     led_control("green", "flash")
@@ -62,8 +69,10 @@ if __name__ == "__main__":
         # TODO: 檢查網路狀態
 
         # Set LED
+        led_control("green", "reset")
         led_control("green", "off")
         led_control("red", "off")
+        time.sleep(1)
 
         recognizer = sr.Recognizer()
         microphone = sr.Microphone()
