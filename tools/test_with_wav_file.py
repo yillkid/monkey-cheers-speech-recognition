@@ -5,7 +5,7 @@ import speech_recognition as sr
 def recognize_speech_from_mic(recognizer):
     # check that input file
     audio = ""
-    with sr.AudioFile("media/monkey-cheers.wav") as source:
+    with sr.AudioFile("../media/monkey-cheers.wav") as source:
         audio = recognizer.record(source)
 
     response = {
