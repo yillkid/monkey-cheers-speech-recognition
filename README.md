@@ -12,7 +12,7 @@
 ```python3 guessing_game.py```
 
 #### Test with wav file:
-```python3 test_with_wav_file.py```
+```python3 tools/test_with_wav_file.py```
 
 ## Reference
 - [The Ultimate Guide To Speech Recognition With Python](https://realpython.com/python-speech-recognition/)
