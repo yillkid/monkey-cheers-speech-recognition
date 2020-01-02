@@ -22,10 +22,15 @@ def recognize_speech_from_mic(recognizer, microphone):
     # from the microphone
     with microphone as source:
         try:
-            print("1/3: 我正在聽呢 ... ...")
-            led_listen()
             recognizer.adjust_for_ambient_noise(source)
+            print("1/3: 我正在聽呢 ... ...")
+            time.sleep(1)
+            led_listen()
             audio = recognizer.listen(source, timeout=3)
+
+            # with open("audio_file.wav", "wb") as file:
+            #    file.write(audio.get_wav_data())
+
         except Exception as e:
             response["success"] = False
             response["error"] = e
@@ -64,9 +69,10 @@ if __name__ == "__main__":
 
         # Reset LED
         led_reset_all()
+        serial_write("2")
 
         recognizer = sr.Recognizer()
-        microphone = sr.Microphone()
+        microphone = sr.Microphone(chunk_size=1024, sample_rate=48000)
 
         print('遊戲開始囉!')
         guess = recognize_speech_from_mic(recognizer, microphone)

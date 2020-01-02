@@ -52,18 +52,18 @@ def led_reset_all():
 
 def led_win():
     control("red", "off")
-    for index in range(5):
+    for index in range(6):
         control("green", "flash")
-        time.sleep(1)
+        time.sleep(0.5)
 
 def led_lose():
     control("green", "off")
-    for index in range(5):
+    for index in range(6):
         control("red", "flash")
-        time.sleep(1)
+        time.sleep(0.5)
 
 def led_listen():
     control("red", "off")
-    time.sleep(1)
+    time.sleep(0.5)
     control("green", "on")
-    time.sleep(1)
+    time.sleep(0.5)
