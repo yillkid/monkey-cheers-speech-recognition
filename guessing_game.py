@@ -2,6 +2,7 @@ import random
 import time
 import speech_recognition as sr
 from led import led_reset_all, led_listen, led_win, led_lose
+from serial import write as serial_write 
 
 def recognize_speech_from_mic(recognizer, microphone):
     # check that recognizer and microphone arguments are appropriate type
@@ -84,8 +85,10 @@ if __name__ == "__main__":
         # 比對答案
         if guess["transcription"] in list_answer:
             print("你猜對了!")
+            serial_write("1")
             led_win()
         else:
             print("你猜錯了！")
+            serial_write("2")
             led_lose()
 
