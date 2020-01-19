@@ -2,7 +2,8 @@ import random
 import time
 import speech_recognition as sr
 from led import led_reset_all, led_listen, led_win, led_lose
-from serial import write as serial_write 
+from tty import write as serial_write 
+from tty import read as serial_read
 
 def recognize_speech_from_mic(recognizer, microphone):
     # check that recognizer and microphone arguments are appropriate type
@@ -18,15 +19,27 @@ def recognize_speech_from_mic(recognizer, microphone):
         "transcription": None
     }
 
+
+    # Read from serial for listening
+    content_from_serial = ""
+    while True:
+        content_from_serial = serial_read()
+        if content_from_serial == "b":
+            break
+        elif content_from_serial == "a":
+            continue
+
     # adjust the recognizer sensitivity to ambient noise and record audio
     # from the microphone
     with microphone as source:
         try:
             recognizer.adjust_for_ambient_noise(source)
             print("1/3: 我正在聽呢 ... ...")
-            time.sleep(1)
-            led_listen()
-            audio = recognizer.listen(source, timeout=3)
+            start_time = time.time()
+#            led_listen()
+            recognizer.dynamic_energy_threshold = False
+            audio = recognizer.listen(source, timeout = 2.0, phrase_time_limit = 2.0)
+            print("我聽完了，一共花了 %s 秒！" % (time.time() - start_time))
 
             # with open("audio_file.wav", "wb") as file:
             #    file.write(audio.get_wav_data())
@@ -68,8 +81,8 @@ if __name__ == "__main__":
         # TODO: 檢查網路狀態
 
         # Reset LED
-        led_reset_all()
-        serial_write("2")
+#        led_reset_all()
+        serial_write("0")
 
         recognizer = sr.Recognizer()
         microphone = sr.Microphone(chunk_size=1024, sample_rate=48000)
@@ -83,7 +96,7 @@ if __name__ == "__main__":
         # if there was an error, stop the game
         if guess["error"]:
             print("ERROR: {}".format(guess["error"]))
-            led_lose()
+#            led_lose()
 
         # show the user the transcription
         print("你說: {}".format(guess["transcription"]))
@@ -92,9 +105,9 @@ if __name__ == "__main__":
         if guess["transcription"] in list_answer:
             print("你猜對了!")
             serial_write("1")
-            led_win()
+#            led_win()
         else:
             print("你猜錯了！")
             serial_write("2")
-            led_lose()
+#            led_lose()
 
