@@ -4,7 +4,7 @@
 
 ```sudo apt install python3-pip portaudio19-dev python-pyaudio python3-pyaudio flac python3-rpi.gpio```
 
-```sudo pip3 install SpeechRecognition PyAudio```
+```sudo pip3 install SpeechRecognition PyAudio pyserial```
 
 ## HowTo
 
