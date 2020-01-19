@@ -64,6 +64,4 @@ def led_lose():
 
 def led_listen():
     control("red", "off")
-    time.sleep(0.5)
     control("green", "on")
-    time.sleep(0.5)
