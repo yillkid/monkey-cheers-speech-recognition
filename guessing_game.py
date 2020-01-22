@@ -4,6 +4,7 @@ import speech_recognition as sr
 from tty import write as serial_write 
 from tty import read as serial_read
 from line_bot import linebot_write
+from network import get_ip_address, connect_time
 
 def recognize_speech_from_mic(recognizer, microphone):
     # check that recognizer and microphone arguments are appropriate type
@@ -40,8 +41,10 @@ def recognize_speech_from_mic(recognizer, microphone):
             audio = recognizer.listen(source, timeout = 2.0, phrase_time_limit = 2.0)
             print("我聽完了，一共花了 %s 秒！" % (time.time() - start_time))
 
-            # with open("audio_file.wav", "wb") as file:
+            #start_time = time.time()
+            #with open("audio_file.wav", "wb") as file:
             #    file.write(audio.get_wav_data())
+            #print("DEBUG: 存檔，一共花了 %s 秒！" % (time.time() - start_time))
 
         except Exception as e:
             response["success"] = False
@@ -77,7 +80,16 @@ if __name__ == "__main__":
             list_answer = f.read().splitlines() 
 
     while True:
-        # TODO: 檢查網路狀態
+        # Check networking
+        try:
+            ip = get_ip_address()
+            duration = connect_time()
+            if float(duration) > 0.02: 
+                linebot_write("幫加油已經啟動完成！IP: " + str(ip) + "，網路品質稍慢！")
+            else:    
+                linebot_write("幫加油已經啟動完成！IP: " + str(ip) + "，網路品質良好！")
+        except:
+            pass
 
         # Write reset to serial
         serial_write("0")

@@ -9,7 +9,6 @@ from linebot.models import (
 )
 
 line_bot_api = LineBotApi('CHANNEL_ACCESS_TOKEN')
-
 def linebot_write(value):
     try:
         line_bot_api.broadcast(TextSendMessage(text = value))
