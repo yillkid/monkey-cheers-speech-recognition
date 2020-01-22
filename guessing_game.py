@@ -1,9 +1,9 @@
 import random
 import time
 import speech_recognition as sr
-from led import led_reset_all, led_listen, led_win, led_lose
 from tty import write as serial_write 
 from tty import read as serial_read
+from line_bot import linebot_write
 
 def recognize_speech_from_mic(recognizer, microphone):
     # check that recognizer and microphone arguments are appropriate type
@@ -36,7 +36,6 @@ def recognize_speech_from_mic(recognizer, microphone):
             recognizer.adjust_for_ambient_noise(source)
             print("1/3: 我正在聽呢 ... ...")
             start_time = time.time()
-#            led_listen()
             recognizer.dynamic_energy_threshold = False
             audio = recognizer.listen(source, timeout = 2.0, phrase_time_limit = 2.0)
             print("我聽完了，一共花了 %s 秒！" % (time.time() - start_time))
@@ -80,8 +79,7 @@ if __name__ == "__main__":
     while True:
         # TODO: 檢查網路狀態
 
-        # Reset LED
-#        led_reset_all()
+        # Write reset to serial
         serial_write("0")
 
         recognizer = sr.Recognizer()
@@ -96,18 +94,15 @@ if __name__ == "__main__":
         # if there was an error, stop the game
         if guess["error"]:
             print("ERROR: {}".format(guess["error"]))
-#            led_lose()
 
         # show the user the transcription
         print("你說: {}".format(guess["transcription"]))
+        linebot_write(guess["transcription"])
 
         # 比對答案
         if guess["transcription"] in list_answer:
             print("你猜對了!")
             serial_write("1")
-#            led_win()
         else:
             print("你猜錯了！")
             serial_write("2")
-#            led_lose()
-
